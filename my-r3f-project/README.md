@@ -61,7 +61,7 @@ npm run preview   # 빌드 결과물 로컬 미리보기
 npm run lint
 ```
 
-## 🎮 조작법
+##  조작법
 
 | 키 | 동작 |
 | --- | --- |
@@ -77,7 +77,7 @@ npm run lint
 <img width="1753" height="788" alt="image" src="https://github.com/user-attachments/assets/4bdd374c-898f-45d8-8177-4f8fddcf4591" />
 <img width="1691" height="804" alt="image" src="https://github.com/user-attachments/assets/4cfe7b58-8250-4a3a-8e87-cdbbc499aa27" />
 
-### 소감
+## 소감
 
 -**하영우(팀장)**
 : 카메라 시점 전환과 먼지 청소 로직, 흡입 이펙트, Clear 화면까지 구현하면서 사용자의 입력이 화면에 자연스럽게 반응하도록 만드는 과정을 익힐 수 있었다. 청소기와 먼지의 충돌을 판정하고, 흡입 파티클·소용돌이·블룸 이펙트가 적절한 타이밍에 재생되도록 맞추는 일이 생각보다 까다로웠지만, 여러 기능이 동시에 동작하면서도 서로 충돌하지 않고 하나의 흐름으로 이어지게 만드는 과정에서 상태 관리의 중요성을 체감할 수 있었다.
