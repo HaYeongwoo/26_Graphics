@@ -14,16 +14,11 @@
 # 1) 의존성 설치
 npm install
 
-# 2) 개발 서버 실행 (브라우저가 자동으로 열립니다)
+# 2) 개발 서버 실행
 npm run dev
-#   -> http://localhost:5173
 
 
 ```
-
-> `npm install` 은 `package.json` 에 정의된 `three`, `vite` 를 내려받습니다.
-> 모델(`public/models/nova.glb`)은 Vite가 자동으로 서빙하므로 별도 설정이 필요 없습니다.
-
 ---
 
 ##  필수 구현 사항 체크리스트
