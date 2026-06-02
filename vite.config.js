@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
 
-// https://vite.dev/config/
+// base: './' 로 두면 dev 서버와 build 결과(상대경로) 모두에서 동작한다.
 export default defineConfig({
-  plugins: [react()],
-})
+  base: './',
+  server: { open: true, port: 5173 },
+});
