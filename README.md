@@ -8,7 +8,7 @@
 
 ---
 
-## 🚀 실행 방법 (npm)
+##  실행 방법 (npm)
 
 ```bash
 # 1) 의존성 설치
@@ -18,9 +18,7 @@ npm install
 npm run dev
 #   -> http://localhost:5173
 
-# (선택) 배포용 빌드 / 빌드 결과 미리보기
-npm run build
-npm run preview
+
 ```
 
 > `npm install` 은 `package.json` 에 정의된 `three`, `vite` 를 내려받습니다.
@@ -28,20 +26,20 @@ npm run preview
 
 ---
 
-## ✅ 필수 구현 사항 체크리스트
+##  필수 구현 사항 체크리스트
 
 | 요구사항 | 구현 내용 |
 |---|---|
-| **① 3D 모델(GLTF/GLB) 1개 이상** | `public/models/nova.glb` (직접 제작한 로봇)을 `GLTFLoader`로 로드 |
-| **② 조명(Light) 적용** | `AmbientLight` + `DirectionalLight`(그림자) + `PointLight` ×2(시안·핑크 림라이트) |
-| **③ 애니메이션 구현** | 둥실 떠다니기·안테나/눈 맥동 발광·점프(중력 물리)·회전 댄스 모드·데코 회전 |
-| **④ 사용자 인터랙션** | 드래그 시점 회전·휠 줌(OrbitControls), **클릭 시 레이캐스트로 로봇 반응**, **WASD/방향키 이동·Space 점프·R 리셋** |
+| **3D 모델(GLTF/GLB) 1개 이상** | public/models/nova.glb을 GLTFLoader로 로드 |
+| **조명(Light) 적용** | AmbientLight + DirectionalLight(그림자) + PointLight ×2(시안·핑크 림라이트) |
+| **애니메이션 구현** | 둥실 떠다니기·안테나/눈 맥동 발광·점프(중력 물리)·회전 댄스 모드·데코 회전 |
+| **사용자 인터랙션** | 드래그 시점 회전·휠 줌(OrbitControls), **클릭 시 레이캐스트로 로봇 반응**, **WASD/방향키 이동·Space 점프·R 리셋** |
 
-추가 요소: `RoomEnvironment` 환경맵 반사, 바닥 그림자, 별 입자 배경, HUD UI, 화면 캡처 버튼.
+추가 요소: 환경맵 반사, 바닥 그림자, 별 입자 배경, HUD UI, 화면 캡처 버튼.
 
 ---
 
-## 🎮 조작 방법
+##  조작 방법
 
 | 입력 | 동작 |
 |---|---|
@@ -53,7 +51,7 @@ npm run preview
 
 ---
 
-## 📁 파일 구조
+##  파일 구조
 
 ```
 graphic/
@@ -66,18 +64,14 @@ graphic/
 ├─ package.json             # 의존성(three, vite) + 스크립트
 ├─ vite.config.js           # Vite 설정
 ├─ build_model.py           # 모델 생성 스크립트 (참고용, trimesh)
-├─ screenshots/             # 결과 화면 캡처
 └─ README.md
 ```
 
-> `node_modules/` 와 `dist/` 는 `.gitignore` 로 제외됩니다. GitHub에는 소스만 올리고,
-> 채점자는 `npm install` 로 의존성을 복원합니다.
-
 ---
 
-## 🧩 동작 원리 (구현 설명)
+##  동작 원리 (구현 설명)
 
-- **모듈 번들링**: Vite가 `src/main.js`의 `import * as THREE from 'three'`, `import ... from 'three/addons/...'`를 `node_modules`에서 해석해 번들링한다.
+- **모듈 번들링**: Vite가 `src/main.js`의 `import * as THREE from 'three'`, `import ... from 'three/addons/...'를 `node_modules`에서 해석해 번들링한다.
 - **렌더링 파이프라인**: `WebGLRenderer`(antialias, PCFSoftShadowMap, ACESFilmic 톤매핑) → `Scene` → `PerspectiveCamera`.
 - **모델 로드**: `GLTFLoader.load()`로 `nova.glb`를 비동기 로드 → `traverse()`로 각 메쉬에 그림자 속성 지정, 눈·안테나·패널은 `emissive` 재질로 교체해 발광.
 - **이동 로직**: 키 입력 상태를 저장 → 매 프레임 카메라 전방 벡터 기준 이동 벡터 계산 → `clamp`로 범위 제한, `atan2`+`MathUtils.damp`로 진행 방향을 향해 부드럽게 회전.
@@ -88,5 +82,5 @@ graphic/
 
 ---
 
-## 🛠 사용 기술
-Vite 5 · npm · Three.js r160 · GLTFLoader · OrbitControls · RoomEnvironment(PMREM) · WebGL
+##  사용 기술
+Vite 5 · npm · Three.js · GLTFLoader · OrbitControls · RoomEnvironment(PMREM) · WebGL
