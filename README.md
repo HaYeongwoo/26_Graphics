@@ -4,9 +4,7 @@
 인터랙티브 3D 콘텐츠입니다. 네온/레트로퓨처 우주 정거장 콘셉트의 공간에서 로봇 마스코트 **NOVA** 를
 직접 움직이고 반응시킬 수 있습니다.
 
-**빌드 도구:** Vite + npm · **렌더링:** Three.js (r160)
-
-![preview](screenshots/capture_1.png)
+**빌드 도구:** Vite + npm · **렌더링:** Three.js
 
 ---
 
