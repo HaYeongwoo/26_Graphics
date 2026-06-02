@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NOVA · Interactive 3D</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --bg:#05060d; --ink:#e8f3ff; --cyan:#36f1ff; --mint:#27e0c0; --pink:#ff5d8f;
+    --panel:rgba(8,14,28,.62); --line:rgba(54,241,255,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+    font-family:'Space Mono',monospace;cursor:crosshair}
+  #app{position:fixed;inset:0}
+  canvas{display:block}
+
+  #loader{position:fixed;inset:0;z-index:50;display:grid;place-items:center;
+    background:radial-gradient(circle at 50% 40%,#0a1430,#05060d 70%);transition:opacity .6s}
+  #loader.hide{opacity:0;pointer-events:none}
+  .ldwrap{text-align:center}
+  .ldwrap h1{font-family:'Orbitron';font-weight:900;font-size:clamp(28px,7vw,64px);
+    letter-spacing:.18em;color:var(--cyan);text-shadow:0 0 24px rgba(54,241,255,.6)}
+  .bar{margin-top:18px;width:240px;height:4px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--mint),var(--cyan));
+    box-shadow:0 0 16px var(--cyan);transition:width .25s}
+  .ldwrap p{margin-top:12px;font-size:12px;letter-spacing:.3em;color:rgba(232,243,255,.55)}
+
+  .hud-corner{position:fixed;width:46px;height:46px;border:2px solid var(--line);z-index:5;pointer-events:none}
+  .hud-corner.tl{top:18px;left:18px;border-right:0;border-bottom:0}
+  .hud-corner.tr{top:18px;right:18px;border-left:0;border-bottom:0}
+  .hud-corner.bl{bottom:18px;left:18px;border-right:0;border-top:0}
+  .hud-corner.br{bottom:18px;right:18px;border-left:0;border-top:0}
+
+  #title{position:fixed;top:30px;left:34px;z-index:6}
+  #title h2{font-family:'Orbitron';font-weight:900;font-size:20px;letter-spacing:.22em;color:var(--ink)}
+  #title h2 b{color:var(--cyan);text-shadow:0 0 12px rgba(54,241,255,.7)}
+  #title span{display:block;margin-top:4px;font-size:10px;letter-spacing:.32em;color:rgba(232,243,255,.45)}
+
+  #help{position:fixed;top:30px;right:34px;z-index:6;text-align:right;
+    font-size:11px;line-height:1.9;letter-spacing:.06em;color:rgba(232,243,255,.7)}
+  #help kbd{display:inline-block;min-width:20px;padding:1px 7px;border:1px solid var(--line);
+    border-radius:5px;background:var(--panel);color:var(--cyan);font-family:'Space Mono';
+    font-size:10px;box-shadow:0 0 8px rgba(54,241,255,.15)}
+
+  #dock{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);z-index:6;
+    display:flex;gap:10px;align-items:center;padding:12px 16px;border:1px solid var(--line);
+    border-radius:16px;background:var(--panel);backdrop-filter:blur(14px);
+    box-shadow:0 0 40px rgba(54,241,255,.08),inset 0 0 24px rgba(54,241,255,.05)}
+  .btn{font-family:'Space Mono';font-weight:700;font-size:12px;letter-spacing:.08em;
+    color:var(--ink);background:rgba(54,241,255,.06);border:1px solid var(--line);
+    padding:9px 14px;border-radius:10px;cursor:pointer;transition:.18s;white-space:nowrap}
+  .btn:hover{background:rgba(54,241,255,.18);color:var(--cyan);transform:translateY(-2px);
+    box-shadow:0 6px 18px rgba(54,241,255,.2)}
+  .btn:active{transform:translateY(0)}
+  .swatch{width:22px;height:22px;border-radius:6px;border:1px solid rgba(255,255,255,.2);cursor:pointer;transition:.18s}
+  .swatch:hover{transform:scale(1.15);box-shadow:0 0 12px currentColor}
+  .sep{width:1px;height:26px;background:var(--line);margin:0 4px}
+
+  #status{position:fixed;left:34px;bottom:32px;z-index:6;font-size:11px;
+    letter-spacing:.1em;color:rgba(232,243,255,.6)}
+  #status .dot{display:inline-block;width:8px;height:8px;border-radius:50%;
+    background:var(--mint);box-shadow:0 0 10px var(--mint);margin-right:6px;animation:blink 1.6s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+  #bubble{position:fixed;z-index:7;transform:translate(-50%,-100%);pointer-events:none;
+    padding:8px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);
+    backdrop-filter:blur(8px);font-size:13px;letter-spacing:.05em;color:var(--cyan);
+    opacity:0;transition:opacity .2s;white-space:nowrap;text-shadow:0 0 8px rgba(54,241,255,.5)}
+  #bubble.show{opacity:1}
+
+  @media(max-width:720px){
+    #help,#title span{display:none}
+    #dock{gap:6px;padding:9px 10px;bottom:18px;flex-wrap:wrap;justify-content:center;max-width:94vw}
+    .btn{font-size:10px;padding:7px 9px}
+    #status{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="loader">
+  <div class="ldwrap">
+    <h1>NOVA</h1>
+    <div class="bar"><i id="ldbar"></i></div>
+    <p id="ldtxt">BOOTING SYSTEMS…</p>
+  </div>
+</div>
+
+<div class="hud-corner tl"></div>
+<div class="hud-corner tr"></div>
+<div class="hud-corner bl"></div>
+<div class="hud-corner br"></div>
+
+<div id="title">
+  <h2>NOVA<b>·</b>UNIT</h2>
+  <span>INTERACTIVE 3D CONTROL ROOM</span>
+</div>
+
+<div id="help">
+  <div><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> &nbsp;이동</div>
+  <div><kbd>Space</kbd> &nbsp;점프</div>
+  <div><kbd>드래그</kbd> &nbsp;시점 회전 · <kbd>휠</kbd> 줌</div>
+  <div><kbd>클릭</kbd> &nbsp;NOVA 반응</div>
+</div>
+
+<div id="bubble"></div>
+
+<div id="status"><span class="dot"></span><span id="statetxt">SYSTEM ONLINE</span></div>
+
+<div id="dock">
+  <button class="btn" data-act="dance">⚡ 댄스</button>
+  <button class="btn" data-act="jump">↑ 점프</button>
+  <button class="btn" data-act="reset">↺ 리셋</button>
+  <div class="sep"></div>
+  <div class="swatch" style="background:#27e0c0;color:#27e0c0" data-color="#27e0c0"></div>
+  <div class="swatch" style="background:#ff5d8f;color:#ff5d8f" data-color="#ff5d8f"></div>
+  <div class="swatch" style="background:#ffd23f;color:#ffd23f" data-color="#ffd23f"></div>
+  <div class="swatch" style="background:#9b8cff;color:#9b8cff" data-color="#9b8cff"></div>
+  <div class="sep"></div>
+  <button class="btn" data-act="shot">📸 캡처</button>
+</div>
+
+<!-- Vite 진입점: three는 node_modules에서 import (importmap 불필요) -->
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
