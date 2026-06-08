@@ -70,11 +70,11 @@ graphic/
 - **모델 로드**: `GLTFLoader.load()`로 `nova.glb`를 비동기 로드 → `traverse()`로 각 메쉬에 그림자 속성 지정, 눈·안테나·패널은 `emissive` 재질로 교체해 발광.
 - **이동 로직**: 키 입력 상태를 저장 → 매 프레임 카메라 전방 벡터 기준 이동 벡터 계산 → `clamp`로 범위 제한, `atan2`+`MathUtils.damp`로 진행 방향을 향해 부드럽게 회전.
 - **점프**: 초기 속도 + 중력 가속(`v -= g·dt`) 적분.
-- **클릭 반응**: `Raycaster`로 화면 좌표를 광선으로 바꿔 로봇과 교차 검사 → 점프·발광·말풍선.
+- **클릭 반응**: `Raycaster`로 화면 좌표를 광선으로 바꿔 로봇과 교차 검사 → 점프·발광
 - **애니메이션 루프**: `requestAnimationFrame` + `Clock.getDelta()`(프레임 독립적 시간 기반 갱신).
 - **환경맵/조명**: `PMREMGenerator`+`RoomEnvironment`로 금속 반사 표현, 방향광이 그림자 생성.
 
 ---
 
-##  사용 기술
-Vite 5 · npm · Three.js · GLTFLoader · OrbitControls · RoomEnvironment(PMREM) · WebGL
+##  실행
+https://assignment-gold-phi.vercel.app/
