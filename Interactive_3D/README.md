@@ -55,10 +55,9 @@ graphic/
 │  └─ main.js               # Three.js 메인 로직
 ├─ public/
 │  └─ models/
-│     └─ nova.glb           # 로봇 3D 모델 (직접 제작)
+│     └─ nova.glb           # 로봇 3D 모델
 ├─ package.json             # 의존성(three, vite) + 스크립트
 ├─ vite.config.js           # Vite 설정
-├─ build_model.py           # 모델 생성 스크립트 (참고용, trimesh)
 └─ README.md
 ```
 
