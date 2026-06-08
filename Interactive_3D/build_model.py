@@ -1,8 +1,4 @@
-"""
-귀여운 로봇 마스코트 'NOVA'를 프리미티브(상자/구/원기둥)로 조합해
-GLB(GLTF binary) 모델로 내보내는 스크립트.
-실행: python build_model.py  ->  models/nova.glb 생성
-"""
+
 import numpy as np
 import trimesh
 from trimesh.creation import box, icosphere, cylinder

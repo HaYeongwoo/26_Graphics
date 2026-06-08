@@ -3,9 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
-/* =========================================================
-   1) 기본 씬 / 카메라 / 렌더러
-   ========================================================= */
+
 const app = document.getElementById('app');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x05060d);
@@ -27,9 +25,7 @@ app.appendChild(renderer.domElement);
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-/* =========================================================
-   2) 조명 (필수: Light 적용)
-   ========================================================= */
+
 scene.add(new THREE.AmbientLight(0x4a5a88, 0.7));        // 전체 환경광
 
 const key = new THREE.DirectionalLight(0xffffff, 2.2);   // 주광 + 그림자
@@ -50,9 +46,6 @@ const rimPink = new THREE.PointLight(0xff5d8f, 45, 30);  // 핑크 림라이트
 rimPink.position.set(6, 2, -5);
 scene.add(rimPink);
 
-/* =========================================================
-   3) 바닥 + 네온 그리드 (그림자 받기)
-   ========================================================= */
 const floorMat = new THREE.MeshStandardMaterial({ color: 0x0a1024, roughness: 0.85, metalness: 0.2 });
 const floor = new THREE.Mesh(new THREE.CircleGeometry(14, 64), floorMat);
 floor.rotation.x = -Math.PI / 2;
@@ -69,9 +62,6 @@ const halo = new THREE.Mesh(new THREE.RingGeometry(2.2, 2.35, 64), haloMat);
 halo.rotation.x = -Math.PI / 2; halo.position.y = 0.02;
 scene.add(halo);
 
-/* =========================================================
-   4) 별 입자 배경 (창의성 요소)
-   ========================================================= */
 const starGeo = new THREE.BufferGeometry();
 const starN = 900, sp = new Float32Array(starN * 3);
 for (let i = 0; i < starN; i++) {
@@ -84,9 +74,6 @@ starGeo.setAttribute('position', new THREE.BufferAttribute(sp, 3));
 const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0x9fdcff, size: 0.18, transparent: true, opacity: 0.8 }));
 scene.add(stars);
 
-/* =========================================================
-   5) 카메라 컨트롤 (마우스 드래그 / 줌)
-   ========================================================= */
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.08;
@@ -95,9 +82,6 @@ controls.maxDistance = 16;
 controls.maxPolarAngle = Math.PI / 2 - 0.05;
 controls.target.set(0, 1.4, 0);
 
-/* =========================================================
-   6) GLB 모델 로드 (필수: GLTF/GLB 모델 1개 이상)
-   ========================================================= */
 const loaderEl = document.getElementById('loader');
 const ldbar = document.getElementById('ldbar');
 const ldtxt = document.getElementById('ldtxt');
@@ -147,15 +131,12 @@ function finishLoad() {
   setTimeout(() => loaderEl.classList.add('hide'), 450);
 }
 
-/* =========================================================
-   7) 인터랙션 — 마우스 클릭(레이캐스트) + 키보드
-   ========================================================= */
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 const bubble = document.getElementById('bubble');
 const stateTxt = document.getElementById('statetxt');
 
-const reactions = ['안녕! 👋', '만나서 반가워', '시스템 정상 ✓', '클릭 고마워!', '오늘도 좋은 하루 🚀', '삐릭—작동 중'];
+const reactions = ['안녕!'];
 
 let sayTimer = null;
 function say(text) {
@@ -180,7 +161,6 @@ function onClick(e) {
   if (hit.length) {
     triggerJump();
     flash();
-    say(reactions[Math.floor(Math.random() * reactions.length)]);
   }
 }
 renderer.domElement.addEventListener('click', onClick);
@@ -245,9 +225,6 @@ function screenshot() {
   say('캡처 저장됨 📸');
 }
 
-/* =========================================================
-   8) 애니메이션 루프 (필수: 애니메이션 구현)
-   ========================================================= */
 const clock = new THREE.Clock();
 const MOVE = 4.2;   // 이동 속도
 const BOUND = 11;   // 이동 범위
